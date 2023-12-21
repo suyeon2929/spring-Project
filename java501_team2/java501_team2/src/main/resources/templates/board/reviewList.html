@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>츠키노야(月の や)료칸&풀빌라</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+            crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <meta name="description" id="description" content="거제도펜션,커플,스파,바닷가,복층,럭셔리,외도,키즈랜드,예약안내">
+    <meta name="keywords" id="keywords" content="거제도펜션, 커플, 바닷가, 해수욕장">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="css/common.css">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:300,400,500,700,900&amp;display=swap&amp;subset=korean"
+          rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!--    <link rel="stylesheet" href="/css/base.css">-->
+    <link rel="icon" href="/images/favicon.ico">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/css/base.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+
+    <script async="" src="//fs.bizspring.net/fs4/logger.v4.1.js"></script>
+    <script type="text/javascript" defer="" src="//log1.toup.net/mirae_response_load.php?k=rkzbn"></script>
+    <script async="" src="//fs.bizspring.net/fs4/bstrk.1.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/modify.js" defer=""></script>
+    <!--    <script type="text/javascript" src="/js/reserve.js" defer=""></script>-->
+    <script type="text/javascript" src="/js/common.js" defer=""></script>
+
+
+    <script>
+        $(document).ready(function () {
+            $("button[name=btnDelete]").on("click", function () {
+                var reviewNum = $(this).attr("id");
+
+                const confirmed = confirm("삭제하시겠습니까?")
+
+                if (confirmed) {
+                    $.ajax({
+                        url: "/reviewDelete.do",
+                        type: "POST",
+                        data: {reviewNum: reviewNum},
+                        success: function (data) {
+
+                            alert("삭제되었습니다.");
+                            location.href = "/reviewList.do"
+                        },
+                        error: function () {
+                            alert("연결 실패");
+                        }
+                    })
+                }
+            });
+
+            $("#btn-review-write").on("click", function () {
+                location.href = "/reviewWrite.do";
+            })
+        })
+    </script>
+</head>
+
+<body id="community" class="tables">
+<div th:replace="~{layout/header :: headerNavbar}"></div>
+
+<section>
+    <div class="section banner" id="Banner">
+        <div class="InBox">
+            <h2 class="ttls">
+                <div></div>
+                <span> CHECK THE&nbsp;<b>REVIEWS</b></span>
+                <strong>REVIEW</strong>
+            </h2>
+        </div>
+    </div>
+
+    <div class="section contents">
+        <div style="height: 50px;"></div>
+        <div class="frame">
+            <h3>
+                <strong>고객 리뷰</strong>
+                <span>방문 후기를 작성해주세요.</span>
+            </h3>
+            <br>
+        </div>
+    </div>
+
+    <div class="section contents container mt-2">
+        <div style="">
+
+            <table class="table table-hover table-striped">
+                <colgroup>
+                    <col style="width: 5%">
+                    <col style="width: 10%">
+                    <col style="width: 12%">
+                    <col style="width: 51%">
+                    <col style="width: 20%">
+                    <col style="width: 7%">
+                </colgroup>
+                <thead class="text-center">
+                <tr>
+                    <th>번호</th>
+                    <th>아이디</th>
+                    <th>평점</th>
+                    <th>리뷰</th>
+                    <th>작성일</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody class="text-center align-middle">
+                <tr th:if="${#lists.size(boardPageList.getList())} > 0"
+                    th:each="item : ${boardPageList.getList()}">
+                    <td th:text="${item.reviewNum}"></td>
+                    <td th:text="${item.reviewId}"></td>
+                    <td th:text="${item.reviewStar}"></td>
+                    <td th:text="${item.reviewContent}" class="text-decoration-none text-start"></td>
+                    <td th:text="${item.reviewPostdate}"></td>
+                    <td>
+                        <button class="buttonDelete btn " th:attrappend="id=${item.reviewNum}"
+                                name="btnDelete">
+                            <img src="/images/delete_icon.png" alt="삭제" style="width: 20px;">
+                        </button>
+                    </td>
+                </tr>
+                <tr th:unless="${#lists.size(boardPageList.getList())} > 0 ">
+                    <td colspan="5">조회된 결과가 없습니다.</td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div class="mt-3">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${boardPageList.getPrePage() == 0} ? 'disabled'">
+                        <a class="page-link" href="#"
+                           th:href="@{/reviewList.do(pageNum=${boardPageList.getPrePage()})}">&laquo;</a>
+                    </li>
+                    <li class="page-item"
+                        th:each="page : ${#numbers.sequence(boardPageList.getNavigateFirstPage(), boardPageList.getNavigateLastPage())}"
+                        th:classappend="${page == boardPageList.getPageNum()} ? 'active'">
+                        <a class="page-link" href="#" th:href="@{/reviewList.do(pageNum=${page})}"
+                           th:text="${page}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${boardPageList.getNextPage() == 0} ? 'disabled'">
+                        <a class="page-link" href="#"
+                           th:href="@{/reviewList.do(pageNum=${boardPageList.getNextPage()})}">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-sm d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" id="btn-review-write">리뷰쓰기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="height: 100px"></div>
+
+    <div th:replace="~{layout/footer :: footer}"></div>
+</section>
+</body>
+</html>
